@@ -1,30 +1,43 @@
-function! muttaliases#FindMuttAliasesFile() abort
-  if exists('g:muttaliases_file')
-    let file = g:muttaliases_file
-  else
-    let file = readfile(expand('~/.muttrc'))
+function! muttaliases#SetMuttAliasesFile() abort
+  if !exists('g:muttaliases_file')
+    if executable('mutt')
+      let output = split(system('mutt -Q "alias_file"'), '\n')
 
-    for line in file
-      let alias_file = matchlist(line,'\v^\s*set\s+alias_file\s*\=\s*[''"]?([^''"]*)[''"]?$')
-      if !empty(alias_file)
-        let file = resolve(expand(alias_file[1]))
-        let g:muttaliases_file = file
-      endif
-    endfor
+      for line in output
+        let alias_file = matchlist(line,'\v^\s*alias_file\s*\=\s*[''"]?([^''"]*)[''"]?$')
+        if !empty(alias_file)
+          let g:muttaliases_file = resolve(expand(alias_file[1]))
+        else
+          let g:muttaliases_file = ''
+        endif
+      endfor
+    else
+      " pedestrian's way
+      let muttrc = readfile(expand('~/.muttrc'))
+
+      for line in muttrc
+        let alias_file = matchlist(line,'\v^\s*set\s+alias_file\s*\=\s*[''"]?([^''"]*)[''"]?$')
+        if !empty(alias_file)
+          let g:muttaliases_file = resolve(expand(alias_file[1]))
+        else
+          let g:muttaliases_file = ''
+        endif
+      endfor
+    endif
   endif
-  if !filereadable(file)
-    echoerr 'No definition of $alias_file in ~/.muttrc found.'
-    echoerr 'Please set g:muttaliases_file in your vimrc to a mutt aliases file!'
-    return ''
-  else
-    return file
+  if !filereadable(g:muttaliases_file)
+    echoerr 'The file ' . g:muttaliases_file . ' is no valid mutt aliases file.'
+    echoerr 'Please set $alias_file in ~/.muttrc or g:muttaliases_file in ~/.vimrc to a mutt aliases file!'
+    let g:muttaliases_file = ''
   endif
 endfunction
 
 function! muttaliases#EditMuttAliasesFile() abort
-  let file = muttaliases#FindMuttAliasesFile()
-  if !empty(file)
+  if !empty(g:muttaliases_file)
     exe 'edit ' . escape(file, ' %#|"')
+  else
+    echoerr 'No valid mutt aliases file found.'
+    echoerr 'Please set $alias_file in ~/.muttrc or g:muttaliases_file in ~/.vimrc to a mutt aliases file!'
   endif
 endfunction
 
@@ -38,7 +51,7 @@ function! muttaliases#CompleteMuttAliases(findstart, base) abort
     let start = match(text_before_cursor, '\v<\S+$')
     return start
   else
-    let file = muttaliases#FindMuttAliasesFile()
+    let file = g:muttaliases_file
 
     if empty(file)
       return []
