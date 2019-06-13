@@ -1,6 +1,6 @@
 " only enable auto completion in Mutt mails
+" only setup muttrc file after command-line parameters have been processed
 autocmd BufRead,BufNewFile,BufFilePost mutt{ng,}-*-\w\+,mutt[[:alnum:]_-]\\\{6\}
-      \ setlocal completefunc=muttaliases#CompleteMuttAliases |
-      \ call muttaliases#SetMuttAliasesFile() |
-      \ command! -buffer EditAliases call muttaliases#EditMuttAliasesFile()
-
+      \ exe 'setlocal completefunc=muttaliases#CompleteMuttAliases' |
+      \ exe 'command! -buffer EditAliases call muttaliases#EditMuttAliasesFile()' |
+      \ autocmd BufWinEnter <buffer> call muttaliases#SetMuttAliasesFile()

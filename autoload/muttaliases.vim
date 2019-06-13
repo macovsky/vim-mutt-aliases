@@ -34,9 +34,9 @@ endfunction
 
 function! muttaliases#EditMuttAliasesFile() abort
   if !empty(g:muttaliases_file)
-    exe 'edit ' . escape(file, ' %#|"')
+    exe 'edit ' . escape(g:muttaliases_file, ' %#|"')
   else
-    echoerr 'No valid mutt aliases file found.'
+    echoerr 'The file ' . g:muttaliases_file . ' is no valid mutt aliases file.'
     echoerr 'Please set $alias_file in ~/.muttrc or g:muttaliases_file in ~/.vimrc to a mutt aliases file!'
   endif
 endfunction
