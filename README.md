@@ -6,16 +6,16 @@ useful when using `Vim` as editor for `mutt`.
 When you're editing a mail file in Vim that reads
 ```
     From: Lu Guanqun <guanqun.lu@gmail.com>
-    To: foo
+    To:   foo
 ```
-and in your alias file have a record
+and in your mutt aliases file there is an entry
 ```
-    alias foo My Foo <foo@bar.com>
+    alias foo foo@bar.com
 ```
 and your cursor is right after `foo`, then hit `Ctrl+X Ctrl+U` to obtain:
 ```
     From: Lu Guanqun <guanqun.lu@gmail.com>
-    To: My Foo <foo@bar.com>
+    To:   foo@bar.com
 ```
 # Commands
 
