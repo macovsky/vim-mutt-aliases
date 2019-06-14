@@ -3,8 +3,10 @@
 ===========================================================================
 0. Usage ~
 
-This plug-in lets you complete mutt aliases (listed in ~/.mutt/aliases)
-inside Vim; useful when using Vim as editor for mutt.
+This plug-in lets you complete mutt aliases (listed in ~/.mutt/aliases) inside
+Vim; useful when using Vim as editor for mutt (especially with $edit_headers).
+(See also the shell script https://github.com/Konfekt/mutt-alias.sh to populate
+the aliases file with recent e-mail addresses in your Inbox or Sent folder).
 
 When you're editing a mail file in Vim that reads
 >
@@ -46,7 +48,11 @@ For example, $file could be
 <
 
 ===========================================================================
-3. Related Plug-in ~
+3. Related ~
+
+To add aliases for all e-mail addresses found in a mail dir, such as the
+INBOX, there is the shell script https://github.com/Konfekt/mutt-alias.sh ;
+best run by a, say weekly, (ana)cronjob.
 
 The plugin https://github.com/Konfekt/vim-mailquery lets you complete e-mail
 addresses in Vim by those in your Inbox (or any other mail folder).
