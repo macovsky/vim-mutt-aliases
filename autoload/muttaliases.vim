@@ -59,17 +59,17 @@ function! muttaliases#CompleteMuttAliases(findstart, base) abort
       return []
     endif
 
+    " build vim regex to sort according to whether pattern matches at
+    " beginning or after delimiter
     let before = '\v^[^@]*'
     let base   = '\V' . escape(a:base, '\')
-    let after  = '\v[^@]*($|\@)'
+    let after  = '\v[^@]*($|[@])'
 
+    let pattern       = before . base . after
+    let pattern_delim = before . '\v(^|\A)' . base . after
     let pattern_begin = '\v^' . base . after
-    let pattern_delim = before . '\v<' . base . after
-    let pattern = before . base . after
 
-    let results_begin = []
-    let results_delim = []
-    let results = []
+    let results = [ [], [], [], [], [], [], [] ]
 
     for line in readfile(file)
       if empty(line)
@@ -79,27 +79,45 @@ function! muttaliases#CompleteMuttAliases(findstart, base) abort
       let line = substitute(line, '\v(\s+-group\s+\S+)+', '','')
       let words = split(line)
       if words[0] is# 'alias' && len(words) >= 3
-        if words[1] =~? pattern
+        let name = words[1]
+        if name =~? pattern
           " get the alias part
           " mutt uses \ to escape ", we need to remove it!
-          let alias = substitute(join(words[2:-1], ' '), '\\', '', 'g')
-          let alias = substitute(alias, '\v([^\\])#.*$', '\1', '')
+          let address = substitute(join(words[2:-1], ' '), '\\', '', 'g')
+          let address = substitute(address, '\v([^\\])#.*$', '\1', '')
           let dict = {}
-          let dict['word'] = alias
-          let dict['abbr'] = words[1]
-          let dict['menu'] = alias
-          " add to the complete list
-          if     dict.word =~? pattern_begin
-            call add(results_begin, dict)
-          elseif dict.word =~? pattern_delim
-            call add(results_delim, dict)
-          else
-            call add(results, dict)
+          let dict['word'] = address
+          let dict['abbr'] = name
+          let dict['menu'] = address
+
+          " weight  according to whether pattern matches at
+          " beginning or after delimiter in name or address
+          let weight = 0
+          if name =~? pattern
+            let weight += 1
+            if    name =~? pattern_delim
+              let weight += 1
+              if  name =~? pattern_begin
+                let weight += 1
+              endif
+            endif
           endif
+          if address =~? pattern
+            let weight += 1
+            if    address =~? pattern_delim
+              let weight += 1
+              if  address =~? pattern_begin
+                let weight += 1
+              endif
+            endif
+          endif
+        call add(results[weight], dict)
         endif
       endif
     endfor
-    let results = sort(results_begin, 1) + sort(results_delim, 1) + sort(results, 1)
+    let results = sort(results[6], 1) +
+          \ sort(results[5], 1) + sort(results[4], 1) + sort(results[3], 1) +
+          \ sort(results[2], 1) + sort(results[1], 1) + sort(results[0], 1)
     return results
   endif
 endfunction
