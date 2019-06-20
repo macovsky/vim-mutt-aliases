@@ -87,7 +87,7 @@ function! muttaliases#CompleteMuttAliases(findstart, base) abort
           let address = substitute(address, '\v([^\\])#.*$', '\1', '')
           let dict = {}
           let dict['word'] = address
-          let dict['abbr'] = name
+          let dict['abbr'] = strlen(name) < 35 ? name : name[0:30] . '...'
           let dict['menu'] = address
 
           " weigh according to whether pattern matches at
