@@ -1,12 +1,12 @@
 function! muttaliases#SetMuttAliasesFile() abort
   if !exists('g:muttaliases_file')
     if executable('mutt')
-      let output = split(system('mutt -Q "alias_file"'), '\n')
+      silent let output = split(system('mutt -Q "alias_file"'), '\n')
 
       for line in output
-        let alias_file = matchlist(line,'\v^\s*' . 'alias_file' . '\s*\=\s*[''"]?([^''"]*)[''"]?$')
+        let alias_file = matchstr(line,'\v^\s*' . 'alias_file' . '\s*\=\s*[''"]?' . '\zs[^''"]*\ze' . '[''"]?$')
         if !empty(alias_file)
-          let g:muttaliases_file = resolve(expand(alias_file[1]))
+          let g:muttaliases_file = resolve(expand(alias_file))
         else
           let g:muttaliases_file = ''
         endif
@@ -16,9 +16,9 @@ function! muttaliases#SetMuttAliasesFile() abort
       let muttrc = readfile(expand('~/.muttrc'))
 
       for line in muttrc
-        let alias_file = matchlist(line,'\v^\s*set\s+' . 'alias_file' . '\s*\=\s*[''"]?([^''"]*)[''"]?$')
+        let alias_file = matchstr(line,'\v^\s*set\s+' . 'alias_file' . '\s*\=\s*[''"]?' . '\zs[^''"]*\ze' . '[''"]?$')
         if !empty(alias_file)
-          let g:muttaliases_file = resolve(expand(alias_file[1]))
+          let g:muttaliases_file = resolve(expand(alias_file))
         else
           let g:muttaliases_file = ''
         endif
