@@ -45,11 +45,10 @@ For example, `$file` could be
 
 # Related:
 
-To add aliases for all e-mail addresses found in a mail dir, such as the `INBOX`, there is the [mutt-alias.sh](https://github.com/Konfekt/mutt-alias.sh) shell script;
-best run by a, say weekly, [(ana)cronjob](https://konfekt.github.io/blog/2016/12/11/sane-cron-setup).
-
-The plugin [vim-mailquery](https://github.com/Konfekt/vim-mailquery) lets you complete e-mail
-addresses in Vim by those in your Inbox (or any other mail folder).
+- To add aliases for all e-mail addresses found in a mail dir, such as the `INBOX`, there is the [mutt-alias.sh](https://github.com/Konfekt/mutt-alias.sh) shell script;
+  best run by a, say weekly, [(ana)cronjob](https://konfekt.github.io/blog/2016/12/11/sane-cron-setup).
+- The plugin [vim-notmuch-addrlookup](https://github.com/Konfekt/vim-notmuch-addrlookup) lets you complete e-mail addresses in Vim by those indexed by [notmuch](https://notmuchmail.org).
+- The plugin [vim-mailquery](https://github.com/Konfekt/vim-mailquery) lets you complete e-mail addresses in Vim by those in your Inbox (or any other mail folder).
 
 # Credits
 
